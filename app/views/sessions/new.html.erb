@@ -1,0 +1,24 @@
+<% content_for :title, "Sign in" %>
+
+<div class="auth">
+  <h1>Sign in</h1>
+
+  <p class="auth__hint">Demo accounts (after <code>bin/rails db:seed</code>):</p>
+  <ul class="auth__accounts">
+    <li><strong>Admin</strong> — admin@example.com / password</li>
+    <li><strong>Teacher</strong> — teacher@example.com / password</li>
+    <li><strong>Student</strong> — student@example.com / password</li>
+  </ul>
+
+  <%= form_with url: login_path, class: "auth__form" do |f| %>
+    <div>
+      <%= f.label :email, "Email" %>
+      <%= f.email_field :email, value: params[:email], required: true, autocomplete: "username" %>
+    </div>
+    <div>
+      <%= f.label :password, "Password" %>
+      <%= f.password_field :password, required: true, autocomplete: "current-password" %>
+    </div>
+    <%= f.submit "Sign in" %>
+  <% end %>
+</div>
