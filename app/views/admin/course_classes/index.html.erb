@@ -5,49 +5,114 @@
 
 <div class="card mb-4">
   <div class="card-body">
-    <h2 class="h5">Create Class</h2>
-    <%= form_with url: admin_course_classes_path, scope: :course_class do |f| %>
-      <div class="row">
-        <div class="col-md-4 mb-3">
-          <%= f.label :teacher_id, "Teacher", class: "form-label" %>
-          <%= f.collection_select :teacher_id, @teachers, :id, :name, { prompt: "Select teacher" }, { class: "form-select", required: true } %>
-        </div>
-        <div class="col-md-4 mb-3">
-          <%= f.label :subject_id, "Subject", class: "form-label" %>
-          <%= f.collection_select :subject_id, @subjects, :id, :name, { prompt: "Select subject" }, { class: "form-select", required: true } %>
-        </div>
-        <div class="col-md-4 mb-3">
+    <%= form_with url: admin_course_classes_path, method: :get, local: true do |f| %>
+      <div class="row align-items-end">
+        <div class="col-md-6 mb-3">
           <%= f.label :classroom_id, "Classroom", class: "form-label" %>
-          <%= f.collection_select :classroom_id, @classrooms, :id, :name, { prompt: "Select classroom" }, { class: "form-select", required: true } %>
-        </div>
-        <div class="col-md-6 mb-3">
-          <%= f.label :weekday, "Weekday (1-7)", class: "form-label" %>
-          <%= f.number_field :weekday, class: "form-control", required: true, min: 1, max: 7, placeholder: "1 = Monday" %>
-        </div>
-        <div class="col-md-6 mb-3">
-          <%= f.label :dayhour, "Hour (1-24)", class: "form-label" %>
-          <%= f.number_field :dayhour, class: "form-control", required: true, min: 1, max: 24, placeholder: "8" %>
+          <%= f.collection_select :classroom_id, @classrooms, :id, :name, { selected: @selected_classroom_id }, { class: "form-select", onchange: "this.form.submit()" } %>
         </div>
       </div>
-      <%= f.submit "Create Class", class: "btn btn-primary btn-sm" %>
     <% end %>
   </div>
 </div>
 
 <div class="card">
   <div class="card-body">
-    <h2 class="h5">List</h2>
-    <ul class="mb-0">
-      <% @course_classes.each do |course_class| %>
-        <li class="d-flex justify-content-between align-items-center gap-2">
-          <span>
-            <strong><%= course_class.subject.name %></strong> - <%= course_class.teacher.name %>
-            @ <%= course_class.classroom.name %>
-            (Day <%= course_class.weekday %>, Hour <%= course_class.dayhour %>)
-          </span>
-          <%= button_to "Delete", admin_course_class_path(course_class), method: :delete, class: "btn btn-outline-danger btn-sm" %>
-        </li>
-      <% end %>
-    </ul>
+    <h2 class="h5 mb-3">Schedule Grid (Day 1-7 × Hour 1-24)</h2>
+    <div class="table-responsive">
+      <table class="table table-bordered table-sm">
+        <thead>
+          <tr>
+            <th>Hour</th>
+            <% (1..7).each do |day| %>
+              <th>Day <%= day %></th>
+            <% end %>
+          </tr>
+        </thead>
+        <tbody>
+          <% (1..24).each do |hour| %>
+            <tr>
+              <td class="fw-bold bg-light"><%= hour %></td>
+              <% (1..7).each do |day| %>
+                <% classes = @course_classes[[day, hour]] || [] %>
+                <td class="p-1" style="min-width: 120px; <%= classes.empty? ? 'cursor: pointer;' : '' %>" <%= raw('onclick="openModal(' + day.to_s + ', ' + hour.to_s + ')"') if classes.empty? %>>
+                  <% if classes.any? %>
+                    <% classes.each do |cc| %>
+                      <div class="badge bg-primary mb-1 d-block text-start">
+                        <%= cc.subject.name %><br>
+                        <small><%= cc.teacher.name %></small>
+                        <%= button_to "×", admin_course_class_path(cc), method: :delete, class: "btn btn-sm btn-outline-light float-end py-0 px-1", style: "font-size: 10px; line-height: 1;" %>
+                      </div>
+                    <% end %>
+                  <% else %>
+                    <div class="text-muted text-center">+</div>
+                  <% end %>
+                </td>
+              <% end %>
+            </tr>
+          <% end %>
+        </tbody>
+      </table>
+    </div>
   </div>
 </div>
+
+<!-- Modal -->
+<div class="modal fade" id="courseClassModal" tabindex="-1" aria-labelledby="courseClassModalLabel" aria-hidden="true">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="courseClassModalLabel">Create Class</h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <%= form_with url: admin_course_classes_path, scope: :course_class do |f| %>
+        <%= f.hidden_field :classroom_id, value: @selected_classroom_id %>
+        <%= f.hidden_field :weekday, id: "modal_weekday" %>
+        <%= f.hidden_field :dayhour, id: "modal_dayhour" %>
+        <div class="modal-body">
+          <div class="mb-3">
+            <label class="form-label fw-bold">Day: <span id="modal_day_label"></span>, Hour: <span id="modal_hour_label"></span></label>
+          </div>
+          <div class="mb-3">
+            <%= f.label :teacher_id, "Teacher", class: "form-label" %>
+            <%= f.collection_select :teacher_id, @teachers, :id, :name, { prompt: "Select teacher" }, { class: "form-select", required: true } %>
+          </div>
+          <div class="mb-3">
+            <%= f.label :subject_id, "Subject", class: "form-label" %>
+            <%= f.collection_select :subject_id, @subjects, :id, :name, { prompt: "Select subject" }, { class: "form-select", required: true } %>
+          </div>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+          <%= f.submit "Create Class", class: "btn btn-primary" %>
+        </div>
+      <% end %>
+    </div>
+  </div>
+</div>
+
+<script>
+  let modal;
+
+  function initModal() {
+    if (typeof bootstrap !== 'undefined') {
+      modal = new bootstrap.Modal(document.getElementById('courseClassModal'));
+    } else {
+      setTimeout(initModal, 50);
+    }
+  }
+
+  if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', initModal);
+  } else {
+    initModal();
+  }
+
+  function openModal(day, hour) {
+    document.getElementById('modal_weekday').value = day;
+    document.getElementById('modal_dayhour').value = hour;
+    document.getElementById('modal_day_label').textContent = day;
+    document.getElementById('modal_hour_label').textContent = hour;
+    if (modal) modal.show();
+  }
+</script>

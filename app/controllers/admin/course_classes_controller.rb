@@ -4,21 +4,26 @@ module Admin
       @teachers = Teacher.order(:name)
       @subjects = Subject.order(:name)
       @classrooms = Classroom.order(:name)
-      @course_classes = CourseClass.includes(:teacher, :subject, :classroom).order(:weekday, :dayhour)
+      @selected_classroom_id = params[:classroom_id] || @classrooms.first&.id
+      @course_classes = CourseClass.includes(:teacher, :subject, :classroom)
+                                   .where(classroom_id: @selected_classroom_id)
+                                   .order(:weekday, :dayhour)
+                                   .group_by { |cc| [cc.weekday, cc.dayhour] }
     end
 
     def create
       attrs = params.require(:course_class).permit(:teacher_id, :subject_id, :classroom_id, :weekday, :dayhour)
       CourseClass.create!(attrs)
-      redirect_to admin_course_classes_path, notice: "Class created."
+      redirect_to admin_course_classes_path(classroom_id: attrs[:classroom_id]), notice: "Class created."
     rescue ActiveRecord::RecordInvalid => e
-      redirect_to admin_course_classes_path, alert: e.record.errors.full_messages.to_sentence
+      redirect_to admin_course_classes_path(classroom_id: attrs[:classroom_id]), alert: e.record.errors.full_messages.to_sentence
     end
 
     def destroy
       course_class = CourseClass.find(params[:id])
+      classroom_id = course_class.classroom_id
       course_class.destroy!
-      redirect_to admin_course_classes_path, notice: "Class deleted."
+      redirect_to admin_course_classes_path(classroom_id: classroom_id), notice: "Class deleted."
     rescue ActiveRecord::RecordNotDestroyed => e
       redirect_to admin_course_classes_path, alert: e.record.errors.full_messages.to_sentence
     end
