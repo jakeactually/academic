@@ -18,5 +18,13 @@ module Admin
     rescue ActiveRecord::RecordInvalid => e
       redirect_to admin_course_classes_path, alert: e.record.errors.full_messages.to_sentence
     end
+
+    def destroy
+      course_class = CourseClass.find(params[:id])
+      course_class.destroy!
+      redirect_to admin_course_classes_path, notice: "Class deleted."
+    rescue ActiveRecord::RecordNotDestroyed => e
+      redirect_to admin_course_classes_path, alert: e.record.errors.full_messages.to_sentence
+    end
   end
 end

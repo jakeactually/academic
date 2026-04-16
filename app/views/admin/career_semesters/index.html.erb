@@ -25,7 +25,10 @@
     <h2 class="h5">List</h2>
     <ul class="mb-0">
       <% @career_semesters.each do |cs| %>
-        <li><%= cs.career.name %> - <%= cs.name %></li>
+        <li class="d-flex justify-content-between align-items-center gap-2">
+          <span><%= cs.career.name %> - <%= cs.name %></span>
+          <%= button_to "Delete", admin_career_semester_path(cs), method: :delete, class: "btn btn-outline-danger btn-sm" %>
+        </li>
       <% end %>
     </ul>
   </div>

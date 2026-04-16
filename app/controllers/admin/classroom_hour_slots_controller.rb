@@ -12,5 +12,13 @@ module Admin
     rescue ActiveRecord::RecordInvalid => e
       redirect_to admin_classroom_hour_slots_path, alert: e.record.errors.full_messages.to_sentence
     end
+
+    def destroy
+      slot = ClassroomHourSlot.find(params[:id])
+      slot.destroy!
+      redirect_to admin_classroom_hour_slots_path, notice: "Classroom hour slot deleted."
+    rescue ActiveRecord::RecordNotDestroyed => e
+      redirect_to admin_classroom_hour_slots_path, alert: e.record.errors.full_messages.to_sentence
+    end
   end
 end

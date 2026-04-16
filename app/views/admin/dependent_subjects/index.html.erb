@@ -25,7 +25,10 @@
     <h2 class="h5">List</h2>
     <ul class="mb-0">
       <% @dependent_subjects.each do |dependency| %>
-        <li><%= dependency.subject.name %> depends on <%= dependency.dependent_subject.name %></li>
+        <li class="d-flex justify-content-between align-items-center gap-2">
+          <span><%= dependency.subject.name %> depends on <%= dependency.dependent_subject.name %></span>
+          <%= button_to "Delete", admin_dependent_subject_path(dependency), method: :delete, class: "btn btn-outline-danger btn-sm" %>
+        </li>
       <% end %>
     </ul>
   </div>

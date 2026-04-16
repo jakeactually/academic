@@ -25,7 +25,10 @@
     <h2 class="h5">List</h2>
     <ul class="mb-0">
       <% @classroom_hour_slots.each do |slot| %>
-        <li><%= slot.classroom.name %> - <%= slot.label %></li>
+        <li class="d-flex justify-content-between align-items-center gap-2">
+          <span><%= slot.classroom.name %> - <%= slot.label %></span>
+          <%= button_to "Delete", admin_classroom_hour_slot_path(slot), method: :delete, class: "btn btn-outline-danger btn-sm" %>
+        </li>
       <% end %>
     </ul>
   </div>

@@ -18,14 +18,14 @@ Rails.application.routes.draw do
   namespace :admin do
     root "dashboard#index"
 
-    resources :careers, only: [ :index, :create ]
-    resources :career_semesters, only: [ :index, :create ]
-    resources :subjects, only: [ :index, :create ]
-    resources :teachers, only: [ :index, :create ]
-    resources :classrooms, only: [ :index, :create ]
-    resources :classroom_hour_slots, only: [ :index, :create ]
-    resources :dependent_subjects, only: [ :index, :create ]
-    resources :career_semester_subjects, only: [ :index, :create ]
-    resources :course_classes, only: [ :index, :create ]
+    resources :careers, only: [ :index, :create, :destroy ]
+    resources :career_semesters, only: [ :index, :create, :destroy ]
+    resources :subjects, only: [ :index, :create, :destroy ]
+    resources :teachers, only: [ :index, :create, :destroy ]
+    resources :classrooms, only: [ :index, :create, :destroy ]
+    resources :classroom_hour_slots, only: [ :index, :create, :destroy ]
+    resources :dependent_subjects, only: [ :index, :create, :destroy ]
+    resources :career_semester_subjects, only: [ :index, :create, :destroy ]
+    resources :course_classes, only: [ :index, :create, :destroy ]
   end
 end

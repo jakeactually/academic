@@ -2,14 +2,27 @@
 
 <h1 class="h3 mb-4">Admin Resources</h1>
 
-<div class="list-group">
-  <%= link_to "Careers", admin_careers_path, class: "list-group-item list-group-item-action" %>
-  <%= link_to "Career Semesters", admin_career_semesters_path, class: "list-group-item list-group-item-action" %>
-  <%= link_to "Subjects", admin_subjects_path, class: "list-group-item list-group-item-action" %>
-  <%= link_to "Teachers", admin_teachers_path, class: "list-group-item list-group-item-action" %>
-  <%= link_to "Classrooms", admin_classrooms_path, class: "list-group-item list-group-item-action" %>
-  <%= link_to "Classroom Hour Slots", admin_classroom_hour_slots_path, class: "list-group-item list-group-item-action" %>
-  <%= link_to "Subject Dependencies", admin_dependent_subjects_path, class: "list-group-item list-group-item-action" %>
-  <%= link_to "Career Semester Subjects", admin_career_semester_subjects_path, class: "list-group-item list-group-item-action" %>
-  <%= link_to "Classes", admin_course_classes_path, class: "list-group-item list-group-item-action" %>
+<div class="card mb-4 border-primary">
+  <div class="card-header bg-primary-subtle">
+    <strong>Core Catalog (Seeded)</strong>
+  </div>
+  <div class="list-group list-group-flush">
+    <%= link_to "Careers", admin_careers_path, class: "list-group-item list-group-item-action" %>
+    <%= link_to "Teachers", admin_teachers_path, class: "list-group-item list-group-item-action" %>
+    <%= link_to "Subjects", admin_subjects_path, class: "list-group-item list-group-item-action" %>
+    <%= link_to "Classrooms", admin_classrooms_path, class: "list-group-item list-group-item-action" %>
+  </div>
+</div>
+
+<div class="card">
+  <div class="card-header">
+    Other Resources
+  </div>
+  <div class="list-group list-group-flush">
+    <%= link_to "Career Semesters", admin_career_semesters_path, class: "list-group-item list-group-item-action" %>
+    <%= link_to "Classroom Hour Slots", admin_classroom_hour_slots_path, class: "list-group-item list-group-item-action" %>
+    <%= link_to "Subject Dependencies", admin_dependent_subjects_path, class: "list-group-item list-group-item-action" %>
+    <%= link_to "Career Semester Subjects", admin_career_semester_subjects_path, class: "list-group-item list-group-item-action" %>
+    <%= link_to "Classes", admin_course_classes_path, class: "list-group-item list-group-item-action" %>
+  </div>
 </div>

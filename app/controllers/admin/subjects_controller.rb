@@ -10,5 +10,13 @@ module Admin
     rescue ActiveRecord::RecordInvalid => e
       redirect_to admin_subjects_path, alert: e.record.errors.full_messages.to_sentence
     end
+
+    def destroy
+      subject = Subject.find(params[:id])
+      subject.destroy!
+      redirect_to admin_subjects_path, notice: "Subject deleted."
+    rescue ActiveRecord::RecordNotDestroyed => e
+      redirect_to admin_subjects_path, alert: e.record.errors.full_messages.to_sentence
+    end
   end
 end

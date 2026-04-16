@@ -21,7 +21,10 @@
     <h2 class="h5">List</h2>
     <ul class="mb-0">
       <% @subjects.each do |subject| %>
-        <li><%= subject.name %></li>
+        <li class="d-flex justify-content-between align-items-center gap-2">
+          <span><%= subject.name %></span>
+          <%= button_to "Delete", admin_subject_path(subject), method: :delete, class: "btn btn-outline-danger btn-sm" %>
+        </li>
       <% end %>
     </ul>
   </div>

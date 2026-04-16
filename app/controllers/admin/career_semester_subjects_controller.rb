@@ -13,5 +13,13 @@ module Admin
     rescue ActiveRecord::RecordInvalid => e
       redirect_to admin_career_semester_subjects_path, alert: e.record.errors.full_messages.to_sentence
     end
+
+    def destroy
+      assignment = CareerSemesterSubject.find(params[:id])
+      assignment.destroy!
+      redirect_to admin_career_semester_subjects_path, notice: "Semester subject assignment deleted."
+    rescue ActiveRecord::RecordNotDestroyed => e
+      redirect_to admin_career_semester_subjects_path, alert: e.record.errors.full_messages.to_sentence
+    end
   end
 end

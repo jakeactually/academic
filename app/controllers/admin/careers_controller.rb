@@ -10,5 +10,13 @@ module Admin
     rescue ActiveRecord::RecordInvalid => e
       redirect_to admin_careers_path, alert: e.record.errors.full_messages.to_sentence
     end
+
+    def destroy
+      career = Career.find(params[:id])
+      career.destroy!
+      redirect_to admin_careers_path, notice: "Career deleted."
+    rescue ActiveRecord::RecordNotDestroyed => e
+      redirect_to admin_careers_path, alert: e.record.errors.full_messages.to_sentence
+    end
   end
 end
