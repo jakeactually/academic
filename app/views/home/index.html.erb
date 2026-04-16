@@ -1,11 +1,13 @@
 <% content_for :title, "Home" %>
 
-<div class="dashboard">
-  <h1>Welcome</h1>
-  <p>You are signed in as <strong><%= current_user.email %></strong>.</p>
-  <p>Role: <strong class="role role--<%= current_user.role %>"><%= current_user.role.humanize %></strong></p>
-
-  <p class="dashboard__next">Use this page as a starting point for role-specific dashboards (admin, teacher, student).</p>
-
-  <%= button_to "Sign out", logout_path, method: :delete, class: "button--secondary" %>
+<div class="card shadow-sm">
+  <div class="card-body p-4">
+    <h1 class="card-title h3 mb-3">Welcome</h1>
+    <p class="mb-2">You are signed in as <strong><%= current_user.email %></strong>.</p>
+    <p class="mb-3">
+      Role:
+      <span class="badge <%= bootstrap_role_badge_class(current_user.role) %>"><%= current_user.role.humanize %></span>
+    </p>
+    <p class="text-muted small mb-0">Use this page as a starting point for role-specific dashboards (admin, teacher, student).</p>
+  </div>
 </div>

@@ -1,24 +1,30 @@
 <% content_for :title, "Sign in" %>
 
-<div class="auth">
-  <h1>Sign in</h1>
+<div class="row justify-content-center">
+  <div class="col-md-8 col-lg-5">
+    <div class="card shadow-sm">
+      <div class="card-body p-4">
+        <h1 class="card-title h3 mb-4">Sign in</h1>
 
-  <p class="auth__hint">Demo accounts (after <code>bin/rails db:seed</code>):</p>
-  <ul class="auth__accounts">
-    <li><strong>Admin</strong> — admin@example.com / password</li>
-    <li><strong>Teacher</strong> — teacher@example.com / password</li>
-    <li><strong>Student</strong> — student@example.com / password</li>
-  </ul>
+        <p class="text-muted small mb-2">Demo accounts (after <code>bin/rails db:seed</code>):</p>
+        <ul class="small text-muted mb-4">
+          <li><strong>Admin</strong> — admin@example.com / password</li>
+          <li><strong>Teacher</strong> — teacher@example.com / password</li>
+          <li><strong>Student</strong> — student@example.com / password</li>
+        </ul>
 
-  <%= form_with url: login_path, class: "auth__form" do |f| %>
-    <div>
-      <%= f.label :email, "Email" %>
-      <%= f.email_field :email, value: params[:email], required: true, autocomplete: "username" %>
+        <%= form_with url: login_path do |f| %>
+          <div class="mb-3">
+            <%= f.label :email, "Email", class: "form-label" %>
+            <%= f.email_field :email, value: params[:email], required: true, autocomplete: "username", class: "form-control" %>
+          </div>
+          <div class="mb-4">
+            <%= f.label :password, "Password", class: "form-label" %>
+            <%= f.password_field :password, required: true, autocomplete: "current-password", class: "form-control" %>
+          </div>
+          <%= f.submit "Sign in", class: "btn btn-primary w-100" %>
+        <% end %>
+      </div>
     </div>
-    <div>
-      <%= f.label :password, "Password" %>
-      <%= f.password_field :password, required: true, autocomplete: "current-password" %>
-    </div>
-    <%= f.submit "Sign in" %>
-  <% end %>
+  </div>
 </div>
