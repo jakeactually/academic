@@ -19,13 +19,12 @@ Rails.application.routes.draw do
     root "dashboard#index"
 
     resources :careers, only: [ :index, :create, :destroy ]
-    resources :career_semesters, only: [ :index, :create, :destroy ]
+    resources :career_subjects, only: [ :index, :create, :destroy ]
     resources :subjects, only: [ :index, :create, :destroy ]
     resources :teachers, only: [ :index, :create, :destroy ]
     resources :classrooms, only: [ :index, :create, :destroy ]
     resources :classroom_hour_slots, only: [ :index, :create, :destroy ]
     resources :dependent_subjects, only: [ :index, :create, :destroy ]
-    resources :career_semester_subjects, only: [ :index, :create, :destroy ]
     resources :course_classes, only: [ :index, :create, :destroy ]
   end
 end

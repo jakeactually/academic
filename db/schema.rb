@@ -10,24 +10,16 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.1].define(version: 2026_04_16_011949) do
-  create_table "career_semester_subjects", force: :cascade do |t|
-    t.integer "career_semester_id", null: false
-    t.datetime "created_at", null: false
-    t.integer "subject_id", null: false
-    t.datetime "updated_at", null: false
-    t.index ["career_semester_id", "subject_id"], name: "idx_unique_career_semester_subjects", unique: true
-    t.index ["career_semester_id"], name: "index_career_semester_subjects_on_career_semester_id"
-    t.index ["subject_id"], name: "index_career_semester_subjects_on_subject_id"
-  end
-
-  create_table "career_semesters", force: :cascade do |t|
+ActiveRecord::Schema[8.1].define(version: 2026_04_16_155500) do
+  create_table "career_subjects", force: :cascade do |t|
     t.integer "career_id", null: false
     t.datetime "created_at", null: false
-    t.string "name", null: false
+    t.integer "semester", null: false
+    t.integer "subject_id", null: false
     t.datetime "updated_at", null: false
-    t.index ["career_id", "name"], name: "index_career_semesters_on_career_id_and_name", unique: true
-    t.index ["career_id"], name: "index_career_semesters_on_career_id"
+    t.index ["career_id", "subject_id"], name: "index_career_subjects_on_career_id_and_subject_id", unique: true
+    t.index ["career_id"], name: "index_career_subjects_on_career_id"
+    t.index ["subject_id"], name: "index_career_subjects_on_subject_id"
   end
 
   create_table "careers", force: :cascade do |t|
@@ -106,9 +98,8 @@ ActiveRecord::Schema[8.1].define(version: 2026_04_16_011949) do
     t.index ["email"], name: "index_users_on_email", unique: true
   end
 
-  add_foreign_key "career_semester_subjects", "career_semesters"
-  add_foreign_key "career_semester_subjects", "subjects"
-  add_foreign_key "career_semesters", "careers"
+  add_foreign_key "career_subjects", "careers"
+  add_foreign_key "career_subjects", "subjects"
   add_foreign_key "classroom_hour_slots", "classrooms"
   add_foreign_key "course_class_hour_slots", "classroom_hour_slots"
   add_foreign_key "course_class_hour_slots", "course_classes"

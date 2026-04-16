@@ -1,6 +1,6 @@
 class Subject < ApplicationRecord
-  has_many :career_semester_subjects, dependent: :destroy
-  has_many :career_semesters, through: :career_semester_subjects
+  has_many :career_subjects, dependent: :destroy
+  has_many :careers, through: :career_subjects
 
   has_many :dependencies, class_name: "DependentSubject", dependent: :destroy
   has_many :dependent_on_subjects, through: :dependencies, source: :dependent_subject
