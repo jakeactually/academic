@@ -1,0 +1,32 @@
+<% content_for :title, "Teachers" %>
+
+<h1 class="h3 mb-4">Teachers</h1>
+<p><%= link_to "Back to Admin", admin_root_path, class: "btn btn-outline-secondary btn-sm mb-3" %></p>
+
+<div class="card mb-4">
+  <div class="card-body">
+    <h2 class="h5">Create Teacher</h2>
+    <%= form_with url: admin_teachers_path, scope: :teacher do |f| %>
+      <div class="mb-3">
+        <%= f.label :name, class: "form-label" %>
+        <%= f.text_field :name, class: "form-control", required: true %>
+      </div>
+      <div class="mb-3">
+        <%= f.label :email, class: "form-label" %>
+        <%= f.email_field :email, class: "form-control", required: true %>
+      </div>
+      <%= f.submit "Create Teacher", class: "btn btn-primary btn-sm" %>
+    <% end %>
+  </div>
+</div>
+
+<div class="card">
+  <div class="card-body">
+    <h2 class="h5">List</h2>
+    <ul class="mb-0">
+      <% @teachers.each do |teacher| %>
+        <li><%= teacher.name %> - <%= teacher.email %></li>
+      <% end %>
+    </ul>
+  </div>
+</div>

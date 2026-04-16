@@ -16,16 +16,16 @@ Rails.application.routes.draw do
   delete "logout", to: "sessions#destroy", as: :logout
 
   namespace :admin do
-    root "catalog#index"
-    get "catalog", to: "catalog#index"
-    post "careers", to: "catalog#create_career", as: :careers
-    post "career_semesters", to: "catalog#create_career_semester", as: :career_semesters
-    post "subjects", to: "catalog#create_subject", as: :subjects
-    post "teachers", to: "catalog#create_teacher", as: :teachers
-    post "classrooms", to: "catalog#create_classroom", as: :classrooms
-    post "classroom_hour_slots", to: "catalog#create_classroom_hour_slot", as: :classroom_hour_slots
-    post "dependent_subjects", to: "catalog#create_dependent_subject", as: :dependent_subjects
-    post "career_semester_subjects", to: "catalog#create_career_semester_subject", as: :career_semester_subjects
-    post "course_classes", to: "catalog#create_course_class", as: :course_classes
+    root "dashboard#index"
+
+    resources :careers, only: [ :index, :create ]
+    resources :career_semesters, only: [ :index, :create ]
+    resources :subjects, only: [ :index, :create ]
+    resources :teachers, only: [ :index, :create ]
+    resources :classrooms, only: [ :index, :create ]
+    resources :classroom_hour_slots, only: [ :index, :create ]
+    resources :dependent_subjects, only: [ :index, :create ]
+    resources :career_semester_subjects, only: [ :index, :create ]
+    resources :course_classes, only: [ :index, :create ]
   end
 end

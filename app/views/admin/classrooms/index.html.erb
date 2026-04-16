@@ -1,0 +1,28 @@
+<% content_for :title, "Classrooms" %>
+
+<h1 class="h3 mb-4">Classrooms</h1>
+<p><%= link_to "Back to Admin", admin_root_path, class: "btn btn-outline-secondary btn-sm mb-3" %></p>
+
+<div class="card mb-4">
+  <div class="card-body">
+    <h2 class="h5">Create Classroom</h2>
+    <%= form_with url: admin_classrooms_path, scope: :classroom do |f| %>
+      <div class="mb-3">
+        <%= f.label :name, class: "form-label" %>
+        <%= f.text_field :name, class: "form-control", required: true %>
+      </div>
+      <%= f.submit "Create Classroom", class: "btn btn-primary btn-sm" %>
+    <% end %>
+  </div>
+</div>
+
+<div class="card">
+  <div class="card-body">
+    <h2 class="h5">List</h2>
+    <ul class="mb-0">
+      <% @classrooms.each do |classroom| %>
+        <li><%= classroom.name %></li>
+      <% end %>
+    </ul>
+  </div>
+</div>

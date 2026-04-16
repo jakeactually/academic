@@ -1,0 +1,32 @@
+<% content_for :title, "Subject Dependencies" %>
+
+<h1 class="h3 mb-4">Subject Dependencies</h1>
+<p><%= link_to "Back to Admin", admin_root_path, class: "btn btn-outline-secondary btn-sm mb-3" %></p>
+
+<div class="card mb-4">
+  <div class="card-body">
+    <h2 class="h5">Create Subject Dependency</h2>
+    <%= form_with url: admin_dependent_subjects_path, scope: :dependent_subject do |f| %>
+      <div class="mb-3">
+        <%= f.label :subject_id, "Subject", class: "form-label" %>
+        <%= f.collection_select :subject_id, @subjects, :id, :name, { prompt: "Select subject" }, { class: "form-select", required: true } %>
+      </div>
+      <div class="mb-3">
+        <%= f.label :dependent_subject_id, "Depends on subject", class: "form-label" %>
+        <%= f.collection_select :dependent_subject_id, @subjects, :id, :name, { prompt: "Select required subject" }, { class: "form-select", required: true } %>
+      </div>
+      <%= f.submit "Create Dependency", class: "btn btn-primary btn-sm" %>
+    <% end %>
+  </div>
+</div>
+
+<div class="card">
+  <div class="card-body">
+    <h2 class="h5">List</h2>
+    <ul class="mb-0">
+      <% @dependent_subjects.each do |dependency| %>
+        <li><%= dependency.subject.name %> depends on <%= dependency.dependent_subject.name %></li>
+      <% end %>
+    </ul>
+  </div>
+</div>
