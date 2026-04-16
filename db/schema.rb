@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.1].define(version: 2026_04_16_173400) do
+ActiveRecord::Schema[8.1].define(version: 2026_04_16_194400) do
   create_table "career_subjects", force: :cascade do |t|
     t.integer "career_id", null: false
     t.datetime "created_at", null: false
@@ -40,14 +40,12 @@ ActiveRecord::Schema[8.1].define(version: 2026_04_16_173400) do
     t.integer "classroom_id", null: false
     t.datetime "created_at", null: false
     t.integer "dayhour", default: 1, null: false
-    t.integer "subject_id", null: false
-    t.integer "teacher_id", null: false
+    t.integer "teacher_subject_id", null: false
     t.datetime "updated_at", null: false
     t.integer "weekday", default: 1, null: false
     t.index ["classroom_id"], name: "index_course_classes_on_classroom_id"
-    t.index ["subject_id"], name: "index_course_classes_on_subject_id"
-    t.index ["teacher_id", "weekday", "dayhour"], name: "idx_unique_teacher_schedule", unique: true
-    t.index ["teacher_id"], name: "index_course_classes_on_teacher_id"
+    t.index ["teacher_subject_id", "weekday", "dayhour"], name: "idx_unique_teacher_subject_schedule", unique: true
+    t.index ["teacher_subject_id"], name: "index_course_classes_on_teacher_subject_id"
   end
 
   create_table "dependent_subjects", force: :cascade do |t|
@@ -65,6 +63,16 @@ ActiveRecord::Schema[8.1].define(version: 2026_04_16_173400) do
     t.string "name", null: false
     t.datetime "updated_at", null: false
     t.index ["name"], name: "index_subjects_on_name", unique: true
+  end
+
+  create_table "teacher_subjects", force: :cascade do |t|
+    t.datetime "created_at", null: false
+    t.integer "subject_id", null: false
+    t.integer "teacher_id", null: false
+    t.datetime "updated_at", null: false
+    t.index ["subject_id"], name: "index_teacher_subjects_on_subject_id"
+    t.index ["teacher_id", "subject_id"], name: "index_teacher_subjects_on_teacher_id_and_subject_id", unique: true
+    t.index ["teacher_id"], name: "index_teacher_subjects_on_teacher_id"
   end
 
   create_table "teachers", force: :cascade do |t|
@@ -87,8 +95,9 @@ ActiveRecord::Schema[8.1].define(version: 2026_04_16_173400) do
   add_foreign_key "career_subjects", "careers"
   add_foreign_key "career_subjects", "subjects"
   add_foreign_key "course_classes", "classrooms"
-  add_foreign_key "course_classes", "subjects"
-  add_foreign_key "course_classes", "teachers"
+  add_foreign_key "course_classes", "teacher_subjects"
   add_foreign_key "dependent_subjects", "subjects"
   add_foreign_key "dependent_subjects", "subjects", column: "dependent_subject_id"
+  add_foreign_key "teacher_subjects", "subjects"
+  add_foreign_key "teacher_subjects", "teachers"
 end

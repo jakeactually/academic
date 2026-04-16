@@ -1,0 +1,37 @@
+<% content_for :title, "Teacher Subjects" %>
+
+<h1 class="h3 mb-4">Teacher Subjects</h1>
+<p><%= link_to "Back to Admin", admin_root_path, class: "btn btn-outline-secondary btn-sm mb-3" %></p>
+
+<div class="card mb-4">
+  <div class="card-body">
+    <h2 class="h5">Link Teacher to Subject</h2>
+    <%= form_with url: admin_teacher_subjects_path, scope: :teacher_subject do |f| %>
+      <div class="row">
+        <div class="col-md-6 mb-3">
+          <%= f.label :teacher_id, "Teacher", class: "form-label" %>
+          <%= f.collection_select :teacher_id, @teachers, :id, :name, { prompt: "Select teacher" }, { class: "form-select", required: true } %>
+        </div>
+        <div class="col-md-6 mb-3">
+          <%= f.label :subject_id, "Subject", class: "form-label" %>
+          <%= f.collection_select :subject_id, @subjects, :id, :name, { prompt: "Select subject" }, { class: "form-select", required: true } %>
+        </div>
+      </div>
+      <%= f.submit "Create Link", class: "btn btn-primary btn-sm" %>
+    <% end %>
+  </div>
+</div>
+
+<div class="card">
+  <div class="card-body">
+    <h2 class="h5">List</h2>
+    <ul class="mb-0">
+      <% @teacher_subjects.each do |link| %>
+        <li class="d-flex justify-content-between align-items-center gap-2">
+          <span><%= link.teacher.name %> - <%= link.subject.name %></span>
+          <%= button_to "Delete", admin_teacher_subject_path(link), method: :delete, class: "btn btn-outline-danger btn-sm" %>
+        </li>
+      <% end %>
+    </ul>
+  </div>
+</div>

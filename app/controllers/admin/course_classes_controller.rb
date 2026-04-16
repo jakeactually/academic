@@ -1,18 +1,17 @@
 module Admin
   class CourseClassesController < BaseController
     def index
-      @teachers = Teacher.order(:name)
-      @subjects = Subject.order(:name)
+      @teacher_subjects = TeacherSubject.includes(:teacher, :subject).order(:created_at)
       @classrooms = Classroom.order(:name)
       @selected_classroom_id = params[:classroom_id] || @classrooms.first&.id
-      @course_classes = CourseClass.includes(:teacher, :subject, :classroom)
+      @course_classes = CourseClass.includes(:classroom, teacher_subject: [:teacher, :subject])
                                    .where(classroom_id: @selected_classroom_id)
                                    .order(:weekday, :dayhour)
                                    .group_by { |cc| [cc.weekday, cc.dayhour] }
     end
 
     def create
-      attrs = params.require(:course_class).permit(:teacher_id, :subject_id, :classroom_id, :weekday, :dayhour)
+      attrs = params.require(:course_class).permit(:teacher_subject_id, :classroom_id, :weekday, :dayhour)
       CourseClass.create!(attrs)
       redirect_to admin_course_classes_path(classroom_id: attrs[:classroom_id]), notice: "Class created."
     rescue ActiveRecord::RecordInvalid => e

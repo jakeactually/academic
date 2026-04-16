@@ -39,8 +39,8 @@
                   <% if classes.any? %>
                     <% classes.each do |cc| %>
                       <div class="badge bg-primary mb-1 d-block text-start">
-                        <%= cc.subject.name %><br>
-                        <small><%= cc.teacher.name %></small>
+                        <%= cc.teacher_subject.subject.name %><br>
+                        <small><%= cc.teacher_subject.teacher.name %></small>
                         <%= button_to "×", admin_course_class_path(cc), method: :delete, class: "btn btn-sm btn-outline-light float-end py-0 px-1", style: "font-size: 10px; line-height: 1;" %>
                       </div>
                     <% end %>
@@ -74,12 +74,8 @@
             <label class="form-label fw-bold">Day: <span id="modal_day_label"></span>, Hour: <span id="modal_hour_label"></span></label>
           </div>
           <div class="mb-3">
-            <%= f.label :teacher_id, "Teacher", class: "form-label" %>
-            <%= f.collection_select :teacher_id, @teachers, :id, :name, { prompt: "Select teacher" }, { class: "form-select", required: true } %>
-          </div>
-          <div class="mb-3">
-            <%= f.label :subject_id, "Subject", class: "form-label" %>
-            <%= f.collection_select :subject_id, @subjects, :id, :name, { prompt: "Select subject" }, { class: "form-select", required: true } %>
+            <%= f.label :teacher_subject_id, "Teacher - Subject", class: "form-label" %>
+            <%= f.collection_select :teacher_subject_id, @teacher_subjects, :id, :display_name, { prompt: "Select teacher-subject" }, { class: "form-select", required: true } %>
           </div>
         </div>
         <div class="modal-footer">
