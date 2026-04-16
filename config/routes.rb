@@ -23,7 +23,6 @@ Rails.application.routes.draw do
     resources :subjects, only: [ :index, :create, :destroy ]
     resources :teachers, only: [ :index, :create, :destroy ]
     resources :classrooms, only: [ :index, :create, :destroy ]
-    resources :classroom_hour_slots, only: [ :index, :create, :destroy ]
     resources :dependent_subjects, only: [ :index, :create, :destroy ]
     resources :course_classes, only: [ :index, :create, :destroy ]
   end

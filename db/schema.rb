@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.1].define(version: 2026_04_16_155500) do
+ActiveRecord::Schema[8.1].define(version: 2026_04_16_170300) do
   create_table "career_subjects", force: :cascade do |t|
     t.integer "career_id", null: false
     t.datetime "created_at", null: false
@@ -29,15 +29,6 @@ ActiveRecord::Schema[8.1].define(version: 2026_04_16_155500) do
     t.index ["name"], name: "index_careers_on_name", unique: true
   end
 
-  create_table "classroom_hour_slots", force: :cascade do |t|
-    t.integer "classroom_id", null: false
-    t.datetime "created_at", null: false
-    t.string "label", null: false
-    t.datetime "updated_at", null: false
-    t.index ["classroom_id", "label"], name: "index_classroom_hour_slots_on_classroom_id_and_label", unique: true
-    t.index ["classroom_id"], name: "index_classroom_hour_slots_on_classroom_id"
-  end
-
   create_table "classrooms", force: :cascade do |t|
     t.datetime "created_at", null: false
     t.string "name", null: false
@@ -45,22 +36,15 @@ ActiveRecord::Schema[8.1].define(version: 2026_04_16_155500) do
     t.index ["name"], name: "index_classrooms_on_name", unique: true
   end
 
-  create_table "course_class_hour_slots", force: :cascade do |t|
-    t.integer "classroom_hour_slot_id", null: false
-    t.integer "course_class_id", null: false
-    t.datetime "created_at", null: false
-    t.datetime "updated_at", null: false
-    t.index ["classroom_hour_slot_id"], name: "index_course_class_hour_slots_on_classroom_hour_slot_id"
-    t.index ["course_class_id", "classroom_hour_slot_id"], name: "idx_unique_course_class_hour_slots", unique: true
-    t.index ["course_class_id"], name: "index_course_class_hour_slots_on_course_class_id"
-  end
-
   create_table "course_classes", force: :cascade do |t|
     t.datetime "created_at", null: false
+    t.integer "dayhour", default: 1, null: false
     t.integer "subject_id", null: false
     t.integer "teacher_id", null: false
     t.datetime "updated_at", null: false
+    t.integer "weekday", default: 1, null: false
     t.index ["subject_id"], name: "index_course_classes_on_subject_id"
+    t.index ["teacher_id", "weekday", "dayhour"], name: "idx_unique_teacher_schedule", unique: true
     t.index ["teacher_id"], name: "index_course_classes_on_teacher_id"
   end
 
@@ -100,9 +84,6 @@ ActiveRecord::Schema[8.1].define(version: 2026_04_16_155500) do
 
   add_foreign_key "career_subjects", "careers"
   add_foreign_key "career_subjects", "subjects"
-  add_foreign_key "classroom_hour_slots", "classrooms"
-  add_foreign_key "course_class_hour_slots", "classroom_hour_slots"
-  add_foreign_key "course_class_hour_slots", "course_classes"
   add_foreign_key "course_classes", "subjects"
   add_foreign_key "course_classes", "teachers"
   add_foreign_key "dependent_subjects", "subjects"
