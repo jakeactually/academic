@@ -8,19 +8,23 @@
     <h2 class="h5">Create Class</h2>
     <%= form_with url: admin_course_classes_path, scope: :course_class do |f| %>
       <div class="row">
-        <div class="col-md-3 mb-3">
+        <div class="col-md-4 mb-3">
           <%= f.label :teacher_id, "Teacher", class: "form-label" %>
           <%= f.collection_select :teacher_id, @teachers, :id, :name, { prompt: "Select teacher" }, { class: "form-select", required: true } %>
         </div>
-        <div class="col-md-3 mb-3">
+        <div class="col-md-4 mb-3">
           <%= f.label :subject_id, "Subject", class: "form-label" %>
           <%= f.collection_select :subject_id, @subjects, :id, :name, { prompt: "Select subject" }, { class: "form-select", required: true } %>
         </div>
-        <div class="col-md-3 mb-3">
+        <div class="col-md-4 mb-3">
+          <%= f.label :classroom_id, "Classroom", class: "form-label" %>
+          <%= f.collection_select :classroom_id, @classrooms, :id, :name, { prompt: "Select classroom" }, { class: "form-select", required: true } %>
+        </div>
+        <div class="col-md-6 mb-3">
           <%= f.label :weekday, "Weekday (1-7)", class: "form-label" %>
           <%= f.number_field :weekday, class: "form-control", required: true, min: 1, max: 7, placeholder: "1 = Monday" %>
         </div>
-        <div class="col-md-3 mb-3">
+        <div class="col-md-6 mb-3">
           <%= f.label :dayhour, "Hour (1-24)", class: "form-label" %>
           <%= f.number_field :dayhour, class: "form-control", required: true, min: 1, max: 24, placeholder: "8" %>
         </div>
@@ -38,6 +42,7 @@
         <li class="d-flex justify-content-between align-items-center gap-2">
           <span>
             <strong><%= course_class.subject.name %></strong> - <%= course_class.teacher.name %>
+            @ <%= course_class.classroom.name %>
             (Day <%= course_class.weekday %>, Hour <%= course_class.dayhour %>)
           </span>
           <%= button_to "Delete", admin_course_class_path(course_class), method: :delete, class: "btn btn-outline-danger btn-sm" %>

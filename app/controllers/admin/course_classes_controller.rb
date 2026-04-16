@@ -3,11 +3,12 @@ module Admin
     def index
       @teachers = Teacher.order(:name)
       @subjects = Subject.order(:name)
-      @course_classes = CourseClass.includes(:teacher, :subject).order(:weekday, :dayhour)
+      @classrooms = Classroom.order(:name)
+      @course_classes = CourseClass.includes(:teacher, :subject, :classroom).order(:weekday, :dayhour)
     end
 
     def create
-      attrs = params.require(:course_class).permit(:teacher_id, :subject_id, :weekday, :dayhour)
+      attrs = params.require(:course_class).permit(:teacher_id, :subject_id, :classroom_id, :weekday, :dayhour)
       CourseClass.create!(attrs)
       redirect_to admin_course_classes_path, notice: "Class created."
     rescue ActiveRecord::RecordInvalid => e
