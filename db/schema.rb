@@ -10,7 +10,93 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.1].define(version: 2026_04_15_234702) do
+ActiveRecord::Schema[8.1].define(version: 2026_04_16_011949) do
+  create_table "career_semester_subjects", force: :cascade do |t|
+    t.integer "career_semester_id", null: false
+    t.datetime "created_at", null: false
+    t.integer "subject_id", null: false
+    t.datetime "updated_at", null: false
+    t.index ["career_semester_id", "subject_id"], name: "idx_unique_career_semester_subjects", unique: true
+    t.index ["career_semester_id"], name: "index_career_semester_subjects_on_career_semester_id"
+    t.index ["subject_id"], name: "index_career_semester_subjects_on_subject_id"
+  end
+
+  create_table "career_semesters", force: :cascade do |t|
+    t.integer "career_id", null: false
+    t.datetime "created_at", null: false
+    t.string "name", null: false
+    t.datetime "updated_at", null: false
+    t.index ["career_id", "name"], name: "index_career_semesters_on_career_id_and_name", unique: true
+    t.index ["career_id"], name: "index_career_semesters_on_career_id"
+  end
+
+  create_table "careers", force: :cascade do |t|
+    t.datetime "created_at", null: false
+    t.string "name", null: false
+    t.datetime "updated_at", null: false
+    t.index ["name"], name: "index_careers_on_name", unique: true
+  end
+
+  create_table "classroom_hour_slots", force: :cascade do |t|
+    t.integer "classroom_id", null: false
+    t.datetime "created_at", null: false
+    t.string "label", null: false
+    t.datetime "updated_at", null: false
+    t.index ["classroom_id", "label"], name: "index_classroom_hour_slots_on_classroom_id_and_label", unique: true
+    t.index ["classroom_id"], name: "index_classroom_hour_slots_on_classroom_id"
+  end
+
+  create_table "classrooms", force: :cascade do |t|
+    t.datetime "created_at", null: false
+    t.string "name", null: false
+    t.datetime "updated_at", null: false
+    t.index ["name"], name: "index_classrooms_on_name", unique: true
+  end
+
+  create_table "course_class_hour_slots", force: :cascade do |t|
+    t.integer "classroom_hour_slot_id", null: false
+    t.integer "course_class_id", null: false
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["classroom_hour_slot_id"], name: "index_course_class_hour_slots_on_classroom_hour_slot_id"
+    t.index ["course_class_id", "classroom_hour_slot_id"], name: "idx_unique_course_class_hour_slots", unique: true
+    t.index ["course_class_id"], name: "index_course_class_hour_slots_on_course_class_id"
+  end
+
+  create_table "course_classes", force: :cascade do |t|
+    t.datetime "created_at", null: false
+    t.integer "subject_id", null: false
+    t.integer "teacher_id", null: false
+    t.datetime "updated_at", null: false
+    t.index ["subject_id"], name: "index_course_classes_on_subject_id"
+    t.index ["teacher_id"], name: "index_course_classes_on_teacher_id"
+  end
+
+  create_table "dependent_subjects", force: :cascade do |t|
+    t.datetime "created_at", null: false
+    t.integer "dependent_subject_id", null: false
+    t.integer "subject_id", null: false
+    t.datetime "updated_at", null: false
+    t.index ["dependent_subject_id"], name: "index_dependent_subjects_on_dependent_subject_id"
+    t.index ["subject_id", "dependent_subject_id"], name: "idx_unique_subject_dependencies", unique: true
+    t.index ["subject_id"], name: "index_dependent_subjects_on_subject_id"
+  end
+
+  create_table "subjects", force: :cascade do |t|
+    t.datetime "created_at", null: false
+    t.string "name", null: false
+    t.datetime "updated_at", null: false
+    t.index ["name"], name: "index_subjects_on_name", unique: true
+  end
+
+  create_table "teachers", force: :cascade do |t|
+    t.datetime "created_at", null: false
+    t.string "email", null: false
+    t.string "name", null: false
+    t.datetime "updated_at", null: false
+    t.index ["email"], name: "index_teachers_on_email", unique: true
+  end
+
   create_table "users", force: :cascade do |t|
     t.datetime "created_at", null: false
     t.string "email", null: false
@@ -19,4 +105,15 @@ ActiveRecord::Schema[8.1].define(version: 2026_04_15_234702) do
     t.datetime "updated_at", null: false
     t.index ["email"], name: "index_users_on_email", unique: true
   end
+
+  add_foreign_key "career_semester_subjects", "career_semesters"
+  add_foreign_key "career_semester_subjects", "subjects"
+  add_foreign_key "career_semesters", "careers"
+  add_foreign_key "classroom_hour_slots", "classrooms"
+  add_foreign_key "course_class_hour_slots", "classroom_hour_slots"
+  add_foreign_key "course_class_hour_slots", "course_classes"
+  add_foreign_key "course_classes", "subjects"
+  add_foreign_key "course_classes", "teachers"
+  add_foreign_key "dependent_subjects", "subjects"
+  add_foreign_key "dependent_subjects", "subjects", column: "dependent_subject_id"
 end

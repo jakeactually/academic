@@ -1,0 +1,9 @@
+# Read about fixtures at https://api.rubyonrails.org/classes/ActiveRecord/FixtureSet.html
+
+one:
+  course_class: one
+  classroom_hour_slot: one
+
+two:
+  course_class: two
+  classroom_hour_slot: two

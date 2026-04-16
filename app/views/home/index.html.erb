@@ -8,6 +8,9 @@
       Role:
       <span class="badge <%= bootstrap_role_badge_class(current_user.role) %>"><%= current_user.role.humanize %></span>
     </p>
+    <% if current_user.admin? %>
+      <%= link_to "Open Admin Creation Panel", admin_root_path, class: "btn btn-primary btn-sm mb-3" %>
+    <% end %>
     <p class="text-muted small mb-0">Use this page as a starting point for role-specific dashboards (admin, teacher, student).</p>
   </div>
 </div>
