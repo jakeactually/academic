@@ -3,35 +3,114 @@
 <h1 class="h3 mb-4">Teacher Subjects</h1>
 <p><%= link_to "Back to Admin", admin_root_path, class: "btn btn-outline-secondary btn-sm mb-3" %></p>
 
-<div class="card mb-4">
+<div class="card mb-4 shadow-sm">
   <div class="card-body">
-    <h2 class="h5">Link Teacher to Subject</h2>
-    <%= form_with url: admin_teacher_subjects_path, scope: :teacher_subject do |f| %>
-      <div class="row">
-        <div class="col-md-6 mb-3">
-          <%= f.label :teacher_id, "Teacher", class: "form-label" %>
-          <%= f.collection_select :teacher_id, @teachers, :id, :name, { prompt: "Select teacher" }, { class: "form-select", required: true } %>
+    <%= form_with url: admin_teacher_subjects_path, method: :get, data: { turbo_frame: "teacher_subjects_content", turbo_action: "advance" } do |f| %>
+      <div class="row align-items-center g-3">
+        <div class="col-auto">
+          <%= f.label :teacher_id, "Select Teacher:", class: "form-label mb-0 fw-bold" %>
         </div>
-        <div class="col-md-6 mb-3">
-          <%= f.label :subject_id, "Subject", class: "form-label" %>
-          <%= f.collection_select :subject_id, @subjects, :id, :name, { prompt: "Select subject" }, { class: "form-select", required: true } %>
+        <div class="col-md-4">
+          <%= f.collection_select :teacher_id, @teachers, :id, :name, 
+              { selected: params[:teacher_id], prompt: "Choose a teacher..." }, 
+              { class: "form-select", onchange: "this.form.requestSubmit()" } %>
         </div>
       </div>
-      <%= f.submit "Create Link", class: "btn btn-primary btn-sm" %>
     <% end %>
   </div>
 </div>
 
-<div class="card">
-  <div class="card-body">
-    <h2 class="h5">List</h2>
-    <ul class="mb-0">
-      <% @teacher_subjects.each do |link| %>
-        <li class="d-flex justify-content-between align-items-center gap-2">
-          <span><%= link.teacher.name %> - <%= link.subject.name %></span>
-          <%= button_to "Delete", admin_teacher_subject_path(link), method: :delete, class: "btn btn-outline-danger btn-sm" %>
-        </li>
-      <% end %>
-    </ul>
-  </div>
-</div>
+<%= turbo_frame_tag "teacher_subjects_content" do %>
+  <% if @teacher %>
+    <div class="row g-4">
+      <!-- Assigned Subjects (Left) -->
+      <div class="col-md-6">
+        <div class="card h-100 shadow-sm border-primary">
+          <div class="card-header bg-primary text-white py-3">
+            <h2 class="h5 mb-0">Assigned to <%= @teacher.name %></h2>
+          </div>
+          <div class="card-body p-0">
+            <% if @teacher_subjects.any? %>
+              <div class="table-responsive">
+                <table class="table table-hover align-middle mb-0">
+                  <thead class="table-light">
+                    <tr>
+                      <th class="ps-3">Subject</th>
+                      <th class="text-end pe-3">Action</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    <% @teacher_subjects.each do |item| %>
+                      <tr>
+                        <td class="ps-3 fw-bold"><%= item.subject.name %></td>
+                        <td class="text-end pe-3">
+                          <%= button_to "Remove", admin_teacher_subject_path(item, teacher_id: @teacher.id), 
+                              method: :delete, 
+                              class: "btn btn-outline-danger btn-sm",
+                              data: { turbo_confirm: "Are you sure you want to remove this subject assignment?" } %>
+                        </td>
+                      </tr>
+                    <% end %>
+                  </tbody>
+                </table>
+              </div>
+            <% else %>
+              <div class="p-5 text-center text-muted">
+                <p class="mb-0">No subjects assigned to this teacher yet.</p>
+              </div>
+            <% end %>
+          </div>
+        </div>
+      </div>
+
+      <!-- Available Subjects (Right) -->
+      <div class="col-md-6">
+        <div class="card h-100 shadow-sm border-success">
+          <div class="card-header bg-success text-white py-3">
+            <h2 class="h5 mb-0">Available Subjects</h2>
+          </div>
+          <div class="card-body p-0">
+            <% if @available_subjects.any? %>
+              <div class="table-responsive">
+                <table class="table table-hover align-middle mb-0">
+                  <thead class="table-light">
+                    <tr>
+                      <th class="ps-3">Subject</th>
+                      <th class="text-end pe-3">Action</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    <% @available_subjects.each do |subject| %>
+                      <tr>
+                        <td class="ps-3 fw-bold"><%= subject.name %></td>
+                        <td class="text-end pe-3">
+                          <%= form_with model: [:admin, TeacherSubject.new], class: "d-inline-block" do |f| %>
+                            <%= f.hidden_field :teacher_id, value: @teacher.id %>
+                            <%= f.hidden_field :subject_id, value: subject.id %>
+                            <%= f.submit "Add", class: "btn btn-outline-success btn-sm" %>
+                          <% end %>
+                        </td>
+                      </tr>
+                    <% end %>
+                  </tbody>
+                </table>
+              </div>
+            <% else %>
+              <div class="p-5 text-center text-muted">
+                <p class="mb-0">All available subjects have been assigned to this teacher.</p>
+              </div>
+            <% end %>
+          </div>
+        </div>
+      </div>
+    </div>
+  <% else %>
+    <div class="card shadow-sm">
+      <div class="card-body py-5 text-center text-muted">
+        <i class="bi bi-person-badge fs-2 mb-3 d-block"></i>
+        <p class="h5 mb-1">No Teacher Selected</p>
+        <p class="mb-0">Please choose a teacher from the dropdown above to manage their subjects.</p>
+      </div>
+    </div>
+  <% end %>
+<% end %>
