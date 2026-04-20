@@ -1,7 +1,7 @@
 module Admin
   class SubjectsController < BaseController
     def index
-      @subjects = Subject.order(:name)
+      @subjects = Subject.order(:name).page(params[:page]).per(20)
     end
 
     def create
