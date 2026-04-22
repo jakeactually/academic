@@ -16,17 +16,41 @@
   </div>
 </div>
 
-<div class="card">
-  <div class="card-body">
-    <h2 class="h5">List</h2>
-    <ul class="mb-3">
-      <% @subjects.each do |subject| %>
-        <li class="d-flex justify-content-between align-items-center gap-2 mb-2">
-          <span><%= subject.name %></span>
-          <%= button_to "Delete", admin_subject_path(subject, page: params[:page]), method: :delete, class: "btn btn-outline-danger btn-sm", data: { turbo_confirm: "Are you sure?" } %>
-        </li>
-      <% end %>
-    </ul>
-    <%= paginate @subjects %>
+<div class="card shadow-sm border-0 mb-4">
+  <div class="card-header bg-white py-3 border-bottom">
+    <h2 class="h5 mb-0">List</h2>
+  </div>
+  <div class="card-body p-0">
+    <div class="table-responsive">
+      <table class="table table-hover align-middle mb-0">
+        <thead class="table-light">
+          <tr>
+            <th class="ps-4">Name</th>
+            <th class="text-end pe-4">Action</th>
+          </tr>
+        </thead>
+        <tbody>
+          <% if @subjects.any? %>
+            <% @subjects.each do |subject| %>
+              <tr>
+                <td class="ps-4 fw-bold"><%= subject.name %></td>
+                <td class="text-end pe-4">
+                  <%= button_to "Delete", admin_subject_path(subject, page: params[:page]), method: :delete, class: "btn btn-outline-danger btn-sm", data: { turbo_confirm: "Are you sure?" } %>
+                </td>
+              </tr>
+            <% end %>
+          <% else %>
+            <tr>
+              <td colspan="2" class="text-center p-4 text-muted">No subjects found.</td>
+            </tr>
+          <% end %>
+        </tbody>
+      </table>
+    </div>
   </div>
 </div>
+<% if @subjects.any? %>
+  <div class="d-flex justify-content-center mt-3">
+    <%= paginate @subjects %>
+  </div>
+<% end %>

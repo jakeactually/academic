@@ -20,16 +20,38 @@
   </div>
 </div>
 
-<div class="card">
-  <div class="card-body">
-    <h2 class="h5">List</h2>
-    <ul class="mb-0">
-      <% @teachers.each do |teacher| %>
-        <li class="d-flex justify-content-between align-items-center gap-2">
-          <span><%= teacher.name %> - <%= teacher.email %></span>
-          <%= button_to "Delete", admin_teacher_path(teacher), method: :delete, class: "btn btn-outline-danger btn-sm" %>
-        </li>
-      <% end %>
-    </ul>
+<div class="card shadow-sm border-0">
+  <div class="card-header bg-white py-3 border-bottom">
+    <h2 class="h5 mb-0">List</h2>
+  </div>
+  <div class="card-body p-0">
+    <div class="table-responsive">
+      <table class="table table-hover align-middle mb-0">
+        <thead class="table-light">
+          <tr>
+            <th class="ps-4">Name</th>
+            <th>Email</th>
+            <th class="text-end pe-4">Action</th>
+          </tr>
+        </thead>
+        <tbody>
+          <% if @teachers.any? %>
+            <% @teachers.each do |teacher| %>
+              <tr>
+                <td class="ps-4 fw-bold"><%= teacher.name %></td>
+                <td><span class="text-muted"><%= teacher.email %></span></td>
+                <td class="text-end pe-4">
+                  <%= button_to "Delete", admin_teacher_path(teacher), method: :delete, class: "btn btn-outline-danger btn-sm", data: { turbo_confirm: "Are you sure?" } %>
+                </td>
+              </tr>
+            <% end %>
+          <% else %>
+            <tr>
+              <td colspan="3" class="text-center p-4 text-muted">No teachers found.</td>
+            </tr>
+          <% end %>
+        </tbody>
+      </table>
+    </div>
   </div>
 </div>
