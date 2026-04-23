@@ -9,6 +9,7 @@ module Admin
       end
       @classrooms = Classroom.order(:name)
       @selected_classroom_id = params[:classroom_id] || @classrooms.first&.id
+      @selected_classroom = @classrooms.find(@selected_classroom_id)
       @course_classes = CourseClass.includes(:classroom, teacher_subject: [:teacher, :subject])
                                    .where(classroom_id: @selected_classroom_id)
                                    .order(:weekday, :dayhour)
