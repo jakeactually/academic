@@ -20,12 +20,13 @@
   <div class="card-body">
     <h2 class="h5 mb-3">Schedule Grid (Day 1-7 × Hour 1-24)</h2>
     <div class="table-responsive">
-      <table class="table table-bordered table-sm">
+      <table class="table table-bordered table-sm" style="table-layout: fixed;">
         <thead>
           <tr>
-            <th>Hour</th>
-            <% (1..7).each do |day| %>
-              <th>Day <%= day %></th>
+            <th style="width: 80px;">Hour</th>
+            <% days = ["Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday"] %>
+            <% days.each do |day_name| %>
+              <th><%= day_name %></th>
             <% end %>
           </tr>
         </thead>
@@ -33,15 +34,15 @@
           <% (7..22).each do |hour| %>
             <tr>
               <td class="fw-bold bg-light"><%= "%02d:00" % hour %></td>
-              <% (1..7).each do |day| %>
+              <% (1..6).each do |day| %>
                 <% classes = @course_classes[[day, hour]] || [] %>
-                <td class="p-1" style="min-width: 120px; <%= classes.empty? ? 'cursor: pointer;' : '' %>" <%= raw('onclick="openModal(' + day.to_s + ', ' + hour.to_s + ')"') if classes.empty? %>>
+                <td class="p-1" style="min-width: 120px; position: relative; <%= classes.empty? ? 'cursor: pointer;' : '' %>" <%= raw('onclick="openModal(' + day.to_s + ', ' + hour.to_s + ')"') if classes.empty? %>>
                   <% if classes.any? %>
                     <% classes.each do |cc| %>
-                      <div class="badge bg-primary mb-1 d-block text-start">
-                        <%= cc.teacher_subject.subject.name %><br>
+                      <div class="badge bg-primary d-block text-start position-relative pe-3 pb-2" title="<%= cc.teacher_subject.subject.name %>">
+                        <%= truncate(cc.teacher_subject.subject.name, length: 25) %><br>
                         <small><%= cc.teacher_subject.teacher.name %></small>
-                        <%= button_to "×", admin_course_class_path(cc), method: :delete, class: "btn btn-sm btn-outline-light float-end py-0 px-1", style: "font-size: 10px; line-height: 1;" %>
+                        <%= button_to "×", admin_course_class_path(cc), method: :delete, class: "btn btn-sm btn-light btn-outline-primary position-absolute top-0 end-0 py-0 px-1 pb-1", style: "font-size: 10px; line-height: 1;" %>
                       </div>
                     <% end %>
                   <% else %>
@@ -113,10 +114,11 @@
     initModal();
   }
 
+  const dayNames = ["Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday"];
   function openModal(day, hour) {
     document.getElementById('modal_weekday').value = day;
     document.getElementById('modal_dayhour').value = hour;
-    document.getElementById('modal_day_label').textContent = day;
+    document.getElementById('modal_day_label').textContent = dayNames[day - 1];
     document.getElementById('modal_hour_label').textContent = (hour < 10 ? '0' : '') + hour + ':00';
     if (modal) modal.show();
   }
