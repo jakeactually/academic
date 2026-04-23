@@ -78,6 +78,16 @@ curriculums = {
   }
 }
 
+# Ensure at least 6 subjects per semester for each career
+curriculums.each do |career_name, semesters|
+  semesters.each do |semester_number, subject_names|
+    current_count = subject_names.size
+    (6 - current_count).times do |i|
+      subject_names << "#{career_name} Elective #{current_count + i + 1} (S#{semester_number})"
+    end
+  end
+end
+
 puts "Creating careers..."
 curriculums.each_key do |name|
   Career.find_or_create_by!(name: name)
@@ -171,4 +181,37 @@ if cs_career
       student.semester = attrs[:semester]
     end
   end
+end
+
+puts "Ensuring every teacher-subject has at least one course class..."
+classrooms_list = Classroom.all.to_a
+if classrooms_list.any?
+  TeacherSubject.find_each do |ts|
+    next if ts.course_classes.exists?
+    
+    created = false
+    attempts = 0
+    while !created && attempts < 200
+      attempts += 1
+      classroom = classrooms_list.sample
+      day = rand(1..6)
+      hour = rand(7..21)
+
+      next if CourseClass.exists?(classroom: classroom, weekday: day, dayhour: hour)
+      next if CourseClass.exists?(teacher_subject: ts, weekday: day, dayhour: hour)
+      
+      begin
+        CourseClass.create!(
+          teacher_subject: ts,
+          classroom: classroom,
+          weekday: day,
+          dayhour: hour
+        )
+        created = true
+      rescue ActiveRecord::RecordInvalid
+        next
+      end
+    end
+  end
+  puts "Finished ensuring all teacher-subjects have classes."
 end
