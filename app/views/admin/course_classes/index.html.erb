@@ -8,6 +8,30 @@
 </h1>
 <p><%= link_to "Back to Dashboard", root_path, class: "btn btn-outline-secondary btn-sm mb-3" %></p>
 
+<% 
+  career_palette = {
+    "Business Management" => "#4e73df",
+    "Computer Science" => "#1cc88a",
+    "Economics" => "#e74a3b",
+    "Finance" => "#f6c23e",
+    "Graphic Design" => "#6f42c1",
+    "Marketing" => "#36b9cc"
+  }
+  default_color = "#858796"
+%>
+
+<div class="mb-4">
+  <h6 class="text-muted small text-uppercase fw-bold mb-2">Careers Legend</h6>
+  <div class="d-flex flex-wrap gap-2">
+    <% @careers.each do |career| %>
+      <div class="d-flex align-items-center">
+        <span class="badge me-1" style="width: 12px; height: 12px; background-color: <%= career_palette[career.name] || default_color %>; padding: 0;">&nbsp;</span>
+        <small><%= career.name %></small>
+      </div>
+    <% end %>
+  </div>
+</div>
+
 <div class="card mb-4">
   <div class="card-body">
     <%= form_with url: admin_course_classes_path, method: :get, local: true do |f| %>
@@ -44,10 +68,15 @@
                 <td class="p-1" style="min-width: 120px; position: relative; <%= classes.empty? ? 'cursor: pointer;' : '' %>" <%= raw('onclick="openModal(' + day.to_s + ', ' + hour.to_s + ')"') if classes.empty? %>>
                   <% if classes.any? %>
                     <% classes.each do |cc| %>
-                      <div class="badge bg-primary d-block text-start position-relative pe-3 pb-2" title="<%= cc.teacher_subject.subject.name %>">
+                      <% 
+                        career = cc.teacher_subject.subject.careers.first
+                        bg_color = career_palette[career&.name] || default_color
+                        text_color = (career&.name == "Finance") ? "#000" : "#fff"
+                      %>
+                      <div class="badge d-block text-start position-relative pe-3 pb-2 mb-1" style="background-color: <%= bg_color %>; color: <%= text_color %>;" title="<%= cc.teacher_subject.subject.name %>">
                         <%= truncate(cc.teacher_subject.subject.name, length: 25) %><br>
-                        <small><%= cc.teacher_subject.teacher.name %></small>
-                        <%= button_to "×", admin_course_class_path(cc), method: :delete, class: "btn btn-sm btn-light btn-outline-primary position-absolute top-0 end-0 py-0 px-1 pb-1", style: "font-size: 10px; line-height: 1;" %>
+                        <small style="opacity: 0.9;"><%= cc.teacher_subject.teacher.name %></small>
+                        <%= button_to "×", admin_course_class_path(cc), method: :delete, class: "btn btn-sm position-absolute top-0 end-0 py-0 px-1 pb-1", style: "font-size: 20px; line-height: 0.75; color: #{text_color}; border: none; background: transparent; opacity: 0.7; font-weight: bold;" %>
                       </div>
                     <% end %>
                   <% else %>
