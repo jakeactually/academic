@@ -1,0 +1,73 @@
+<% content_for :title, "Students" %>
+
+<h1 class="h3 mb-4">Students</h1>
+<p><%= link_to "Back to Dashboard", root_path, class: "btn btn-outline-secondary btn-sm mb-3" %></p>
+
+<div class="card mb-4">
+  <div class="card-body">
+    <h2 class="h5">Create Student</h2>
+    <%= form_with url: admin_students_path, scope: :student do |f| %>
+      <div class="row g-3 align-items-end">
+        <div class="col-md-3">
+          <%= f.label :name, class: "form-label" %>
+          <%= f.text_field :name, class: "form-control", required: true %>
+        </div>
+        <div class="col-md-3">
+          <%= f.label :email, class: "form-label" %>
+          <%= f.email_field :email, class: "form-control", required: true %>
+        </div>
+        <div class="col-md-3">
+          <%= f.label :career_id, "Career", class: "form-label" %>
+          <%= f.collection_select :career_id, Career.all, :id, :name, { prompt: "Select Career" }, { class: "form-select", required: true } %>
+        </div>
+        <div class="col-md-2">
+          <%= f.label :semester, class: "form-label" %>
+          <%= f.number_field :semester, class: "form-control", required: true, min: 1, max: 10 %>
+        </div>
+        <div class="col-md-1">
+          <%= f.submit "Create", class: "btn btn-primary w-100" %>
+        </div>
+      </div>
+    <% end %>
+  </div>
+</div>
+
+<div class="card shadow-sm border-0">
+  <div class="card-header bg-white py-3 border-bottom">
+    <h2 class="h5 mb-0">List</h2>
+  </div>
+  <div class="card-body p-0">
+    <div class="table-responsive">
+      <table class="table table-hover align-middle mb-0">
+        <thead class="table-light">
+          <tr>
+            <th class="ps-4">Name</th>
+            <th>Email</th>
+            <th>Career</th>
+            <th>Semester</th>
+            <th class="text-end pe-4">Action</th>
+          </tr>
+        </thead>
+        <tbody>
+          <% if @students.any? %>
+            <% @students.each do |student| %>
+              <tr>
+                <td class="ps-4"><%= student.name %></td>
+                <td><%= student.email %></td>
+                <td><%= student.career.name %></td>
+                <td><%= student.semester %></td>
+                <td class="text-end pe-4">
+                  <%= button_to "Delete", admin_student_path(student), method: :delete, form: { data: { turbo_confirm: 'Are you sure?' } }, class: "btn btn-sm btn-outline-danger" %>
+                </td>
+              </tr>
+            <% end %>
+          <% else %>
+            <tr>
+              <td colspan="5" class="text-center text-muted py-4">No students available.</td>
+            </tr>
+          <% end %>
+        </tbody>
+      </table>
+    </div>
+  </div>
+</div>

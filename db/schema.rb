@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.1].define(version: 2026_04_16_194400) do
+ActiveRecord::Schema[8.1].define(version: 2026_04_23_002136) do
   create_table "career_subjects", force: :cascade do |t|
     t.integer "career_id", null: false
     t.datetime "created_at", null: false
@@ -58,6 +58,39 @@ ActiveRecord::Schema[8.1].define(version: 2026_04_16_194400) do
     t.index ["subject_id"], name: "index_dependent_subjects_on_subject_id"
   end
 
+  create_table "student_course_classes", force: :cascade do |t|
+    t.boolean "attending", default: false, null: false
+    t.integer "course_class_id", null: false
+    t.datetime "created_at", null: false
+    t.integer "student_id", null: false
+    t.datetime "updated_at", null: false
+    t.index ["course_class_id"], name: "index_student_course_classes_on_course_class_id"
+    t.index ["student_id", "course_class_id"], name: "index_student_course_classes_on_student_id_and_course_class_id", unique: true
+    t.index ["student_id"], name: "index_student_course_classes_on_student_id"
+  end
+
+  create_table "student_subjects", force: :cascade do |t|
+    t.datetime "created_at", null: false
+    t.boolean "passed", default: false, null: false
+    t.integer "student_id", null: false
+    t.integer "subject_id", null: false
+    t.datetime "updated_at", null: false
+    t.index ["student_id", "subject_id"], name: "index_student_subjects_on_student_id_and_subject_id", unique: true
+    t.index ["student_id"], name: "index_student_subjects_on_student_id"
+    t.index ["subject_id"], name: "index_student_subjects_on_subject_id"
+  end
+
+  create_table "students", force: :cascade do |t|
+    t.integer "career_id", null: false
+    t.datetime "created_at", null: false
+    t.string "email", null: false
+    t.string "name", null: false
+    t.integer "semester", null: false
+    t.datetime "updated_at", null: false
+    t.index ["career_id"], name: "index_students_on_career_id"
+    t.index ["email"], name: "index_students_on_email", unique: true
+  end
+
   create_table "subjects", force: :cascade do |t|
     t.datetime "created_at", null: false
     t.string "name", null: false
@@ -98,6 +131,11 @@ ActiveRecord::Schema[8.1].define(version: 2026_04_16_194400) do
   add_foreign_key "course_classes", "teacher_subjects"
   add_foreign_key "dependent_subjects", "subjects"
   add_foreign_key "dependent_subjects", "subjects", column: "dependent_subject_id"
+  add_foreign_key "student_course_classes", "course_classes"
+  add_foreign_key "student_course_classes", "students"
+  add_foreign_key "student_subjects", "students"
+  add_foreign_key "student_subjects", "subjects"
+  add_foreign_key "students", "careers"
   add_foreign_key "teacher_subjects", "subjects"
   add_foreign_key "teacher_subjects", "teachers"
 end

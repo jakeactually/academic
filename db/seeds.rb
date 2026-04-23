@@ -152,3 +152,23 @@ classrooms = [
 classrooms.each do |name|
   Classroom.find_or_create_by!(name:)
 end
+
+puts "Creating students..."
+cs_career = Career.find_by(name: "Computer Science") || Career.first
+
+if cs_career
+  students_data = [
+    { name: "Alice Smith", email: "alice.smith@example.com", semester: 1 },
+    { name: "Bob Johnson", email: "bob.johnson@example.com", semester: 2 },
+    { name: "Charlie Brown", email: "charlie.brown@example.com", semester: 3 },
+    { name: "Diana Prince", email: "diana.prince@example.com", semester: 4 }
+  ]
+
+  students_data.each do |attrs|
+    Student.find_or_create_by!(email: attrs[:email]) do |student|
+      student.name = attrs[:name]
+      student.career = cs_career
+      student.semester = attrs[:semester]
+    end
+  end
+end
