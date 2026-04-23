@@ -1,7 +1,12 @@
 module Admin
   class CourseClassesController < BaseController
     def index
-      @teacher_subjects = TeacherSubject.includes(:teacher, :subject).order(:created_at)
+      @teacher_subjects = TeacherSubject.includes(:teacher, subject: :careers).order(:created_at)
+      @careers = Career.order(:name)
+      @career_ts_map = {}
+      @careers.each do |c|
+        @career_ts_map[c.id] = @teacher_subjects.select { |ts| ts.subject.career_ids.include?(c.id) }.map(&:id)
+      end
       @classrooms = Classroom.order(:name)
       @selected_classroom_id = params[:classroom_id] || @classrooms.first&.id
       @course_classes = CourseClass.includes(:classroom, teacher_subject: [:teacher, :subject])

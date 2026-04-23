@@ -30,9 +30,9 @@
           </tr>
         </thead>
         <tbody>
-          <% (1..24).each do |hour| %>
+          <% (7..22).each do |hour| %>
             <tr>
-              <td class="fw-bold bg-light"><%= hour %></td>
+              <td class="fw-bold bg-light"><%= "%02d:00" % hour %></td>
               <% (1..7).each do |day| %>
                 <% classes = @course_classes[[day, hour]] || [] %>
                 <td class="p-1" style="min-width: 120px; <%= classes.empty? ? 'cursor: pointer;' : '' %>" <%= raw('onclick="openModal(' + day.to_s + ', ' + hour.to_s + ')"') if classes.empty? %>>
@@ -74,8 +74,17 @@
             <label class="form-label fw-bold">Day: <span id="modal_day_label"></span>, Hour: <span id="modal_hour_label"></span></label>
           </div>
           <div class="mb-3">
+            <label for="modal_career_id" class="form-label">Career Filter (Optional)</label>
+            <select id="modal_career_id" class="form-select" onchange="filterTeacherSubjects()">
+              <option value="">All Careers</option>
+              <% @careers.each do |career| %>
+                <option value="<%= career.id %>"><%= career.name %></option>
+              <% end %>
+            </select>
+          </div>
+          <div class="mb-3">
             <%= f.label :teacher_subject_id, "Teacher - Subject", class: "form-label" %>
-            <%= f.collection_select :teacher_subject_id, @teacher_subjects, :id, :display_name, { prompt: "Select teacher-subject" }, { class: "form-select", required: true } %>
+            <%= f.collection_select :teacher_subject_id, @teacher_subjects, :id, :display_name, { prompt: "Select teacher-subject" }, { class: "form-select", required: true, id: "modal_teacher_subject_id" } %>
           </div>
         </div>
         <div class="modal-footer">
@@ -108,7 +117,23 @@
     document.getElementById('modal_weekday').value = day;
     document.getElementById('modal_dayhour').value = hour;
     document.getElementById('modal_day_label').textContent = day;
-    document.getElementById('modal_hour_label').textContent = hour;
+    document.getElementById('modal_hour_label').textContent = (hour < 10 ? '0' : '') + hour + ':00';
     if (modal) modal.show();
+  }
+
+  const careerTsMap = <%= raw @career_ts_map.to_json %>;
+
+  function filterTeacherSubjects() {
+    const careerId = document.getElementById('modal_career_id').value;
+    const tsSelect = document.getElementById('modal_teacher_subject_id');
+    const allowedIds = careerId ? careerTsMap[careerId] : null;
+
+    Array.from(tsSelect.options).forEach(opt => {
+      if (opt.value === "") return;
+      const allowed = (!allowedIds || allowedIds.includes(parseInt(opt.value)));
+      opt.hidden = !allowed;
+      opt.disabled = !allowed;
+    });
+    tsSelect.value = "";
   }
 </script>
