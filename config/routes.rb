@@ -10,6 +10,8 @@ Rails.application.routes.draw do
   # get "service-worker" => "rails/pwa#service_worker", as: :pwa_service_worker
 
   root "dashboard#index"
+  post "dashboard/enroll/:course_class_id", to: "dashboard#enroll", as: :enroll_class
+  delete "dashboard/drop/:course_class_id", to: "dashboard#drop", as: :drop_class
 
   get "login", to: "sessions#new", as: :login
   post "login", to: "sessions#create"

@@ -158,7 +158,7 @@ cs_career = Career.find_by(name: "Computer Science") || Career.first
 
 if cs_career
   students_data = [
-    { name: "Alice Smith", email: "alice.smith@example.com", semester: 1 },
+    { name: "Alice Smith", email: "student@example.com", semester: 1 },
     { name: "Bob Johnson", email: "bob.johnson@example.com", semester: 2 },
     { name: "Charlie Brown", email: "charlie.brown@example.com", semester: 3 },
     { name: "Diana Prince", email: "diana.prince@example.com", semester: 4 }

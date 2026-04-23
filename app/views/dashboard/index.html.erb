@@ -29,4 +29,105 @@
       <%= link_to "Classes", admin_course_classes_path, class: "list-group-item list-group-item-action" %>
     </div>
   </div>
+<% elsif current_user.student? %>
+  <% if @student.nil? %>
+    <div class="alert alert-warning">
+      We couldn't find a student record matching your email (<strong><%= current_user.email %></strong>). Please contact administration.
+    </div>
+  <% else %>
+    <div class="card mb-4 border-info shadow-sm">
+      <div class="card-header bg-info text-white">
+        <strong>Student Information</strong>
+      </div>
+      <div class="card-body">
+        <div class="row">
+          <div class="col-md-4">
+            <strong>Name:</strong> <%= @student.name %>
+          </div>
+          <div class="col-md-4">
+            <strong>Career:</strong> <%= @student.career.name %>
+          </div>
+          <div class="col-md-4">
+            <strong>Semester:</strong> <%= @student.semester %>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <h2 class="h5 mb-3">Currently Enrolled Classes</h2>
+    <div class="card shadow-sm border-0 mb-4">
+      <div class="card-body p-0">
+        <div class="table-responsive">
+          <table class="table table-hover align-middle mb-0">
+            <thead class="table-light">
+              <tr>
+                <th class="ps-4">Subject</th>
+                <th>Teacher</th>
+                <th>Classroom</th>
+                <th>Time (Day/Hour)</th>
+                <th class="text-end pe-4">Action</th>
+              </tr>
+            </thead>
+            <tbody>
+              <% if @taken_classes.any? %>
+                <% @taken_classes.each do |c| %>
+                  <tr>
+                    <td class="ps-4"><%= c.teacher_subject.subject.name %></td>
+                    <td><%= c.teacher_subject.teacher.name %></td>
+                    <td><%= c.classroom.name %></td>
+                    <td><%= c.weekday %> / <%= c.dayhour %></td>
+                    <td class="text-end pe-4">
+                      <%= button_to "Drop", drop_class_path(c), method: :delete, form: { data: { turbo_confirm: 'Drop this class?' } }, class: "btn btn-sm btn-outline-danger" %>
+                    </td>
+                  </tr>
+                <% end %>
+              <% else %>
+                <tr>
+                  <td colspan="5" class="text-center text-muted py-4">You are not enrolled in any classes yet.</td>
+                </tr>
+              <% end %>
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+
+    <h2 class="h5 mb-3">Available Classes (Semester <%= @student.semester %>)</h2>
+    <div class="card shadow-sm border-0">
+      <div class="card-body p-0">
+        <div class="table-responsive">
+          <table class="table table-hover align-middle mb-0">
+            <thead class="table-light">
+              <tr>
+                <th class="ps-4">Subject</th>
+                <th>Teacher</th>
+                <th>Classroom</th>
+                <th>Time (Day/Hour)</th>
+                <th class="text-end pe-4">Action</th>
+              </tr>
+            </thead>
+            <tbody>
+              <% if @available_classes.any? %>
+                <% @available_classes.each do |c| %>
+                  <tr>
+                    <td class="ps-4"><%= c.teacher_subject.subject.name %></td>
+                    <td><%= c.teacher_subject.teacher.name %></td>
+                    <td><%= c.classroom.name %></td>
+                    <td><%= c.weekday %> / <%= c.dayhour %></td>
+                    <td class="text-end pe-4">
+                      <%= button_to "Enroll", enroll_class_path(c), method: :post, class: "btn btn-sm btn-primary" %>
+                    </td>
+                  </tr>
+                <% end %>
+              <% else %>
+                <tr>
+                  <td colspan="5" class="text-center text-muted py-4">No more available classes for your semester.</td>
+                </tr>
+              <% end %>
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+  <% end %>
 <% end %>
