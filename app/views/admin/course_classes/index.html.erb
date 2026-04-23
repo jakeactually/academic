@@ -1,6 +1,11 @@
 <% content_for :title, "Classes" %>
 
-<h1 class="h3 mb-4">Classes</h1>
+<h1 class="h3 mb-4">
+  Classes 
+  <span class="badge bg-info text-dark ms-2" style="font-size: 0.5em; vertical-align: middle;">
+    <%= @season.capitalize %> Season (<%= @season == 'summer' ? 'Odd' : 'Even' %> Semesters)
+  </span>
+</h1>
 <p><%= link_to "Back to Dashboard", root_path, class: "btn btn-outline-secondary btn-sm mb-3" %></p>
 
 <div class="card mb-4">

@@ -1,7 +1,14 @@
 module Admin
   class CourseClassesController < BaseController
     def index
-      @teacher_subjects = TeacherSubject.includes(:teacher, subject: :careers).order(:created_at)
+      @season = ENV.fetch('ACADEMIC_SEASON', 'summer')
+      @parity = (@season == 'summer' ? 1 : 0)
+
+      @teacher_subjects = TeacherSubject.joins(subject: :career_subjects)
+                                       .where('career_subjects.semester % 2 = ?', @parity)
+                                       .distinct
+                                       .includes(:teacher, subject: :careers)
+                                       .order(:created_at)
       @careers = Career.order(:name)
       @career_ts_map = {}
       @careers.each do |c|
@@ -9,9 +16,13 @@ module Admin
       end
       @classrooms = Classroom.order(:name)
       @selected_classroom_id = params[:classroom_id] || @classrooms.first&.id
-      @selected_classroom = @classrooms.find(@selected_classroom_id)
+      @selected_classroom = @classrooms.find_by(id: @selected_classroom_id) || @classrooms.first
+      
       @course_classes = CourseClass.includes(:classroom, teacher_subject: [:teacher, :subject])
+                                   .joins(teacher_subject: { subject: :career_subjects })
                                    .where(classroom_id: @selected_classroom_id)
+                                   .where('career_subjects.semester % 2 = ?', @parity)
+                                   .distinct
                                    .order(:weekday, :dayhour)
                                    .group_by { |cc| [cc.weekday, cc.dayhour] }
     end
