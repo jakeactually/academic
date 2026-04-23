@@ -1,0 +1,31 @@
+<% content_for :title, "Dashboard" %>
+
+<h1 class="h3 mb-4">Dashboard</h1>
+
+<p class="mb-4">You are signed in as <strong><%= current_user.email %></strong>. Role: <span class="badge <%= bootstrap_role_badge_class(current_user.role) %>"><%= current_user.role.humanize %></span></p>
+
+<% if current_user.admin? %>
+  <div class="card mb-4 border-primary shadow-sm">
+    <div class="card-header bg-primary-subtle">
+      <strong>Core Catalog (Seeded)</strong>
+    </div>
+    <div class="list-group list-group-flush">
+      <%= link_to "Careers", admin_careers_path, class: "list-group-item list-group-item-action" %>
+      <%= link_to "Teachers", admin_teachers_path, class: "list-group-item list-group-item-action" %>
+      <%= link_to "Subjects", admin_subjects_path, class: "list-group-item list-group-item-action" %>
+      <%= link_to "Classrooms", admin_classrooms_path, class: "list-group-item list-group-item-action" %>
+    </div>
+  </div>
+
+  <div class="card shadow-sm">
+    <div class="card-header">
+      Other Resources
+    </div>
+    <div class="list-group list-group-flush">
+      <%= link_to "Career Subjects", admin_career_subjects_path, class: "list-group-item list-group-item-action" %>
+      <%= link_to "Teacher Subjects", admin_teacher_subjects_path, class: "list-group-item list-group-item-action" %>
+      <%= link_to "Subject Dependencies", admin_dependent_subjects_path, class: "list-group-item list-group-item-action" %>
+      <%= link_to "Classes", admin_course_classes_path, class: "list-group-item list-group-item-action" %>
+    </div>
+  </div>
+<% end %>
