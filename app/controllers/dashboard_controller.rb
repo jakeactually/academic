@@ -3,7 +3,8 @@ class DashboardController < ApplicationController
     if current_user.student?
       @student = Student.find_by(email: current_user.email)
       if @student
-        @taken_classes = @student.course_classes.includes(teacher_subject: [:subject, :teacher], classroom: [])
+        @taken_classes = @student.course_classes.includes(teacher_subject: [:teacher, { subject: :careers }], classroom: [])
+        @schedule_classes = @taken_classes.group_by { |c| [c.weekday, c.dayhour] }
         
         subject_ids = CareerSubject.where(career_id: @student.career_id, semester: @student.semester).select(:subject_id)
         
@@ -13,6 +14,14 @@ class DashboardController < ApplicationController
         if @taken_classes.any?
           @available_classes = @available_classes.where.not(id: @taken_classes.select(:id))
         end
+      end
+    elsif current_user.teacher?
+      @teacher = Teacher.find_by(email: current_user.email)
+      if @teacher
+        @assigned_classes = CourseClass.includes(teacher_subject: { subject: :careers }, classroom: [])
+                                       .joins(:teacher_subject)
+                                       .where(teacher_subjects: { teacher_id: @teacher.id })
+        @schedule_classes = @assigned_classes.group_by { |c| [c.weekday, c.dayhour] }
       end
     end
   end

@@ -1,0 +1,60 @@
+<% 
+  career_palette = {
+    "Business Management" => "#4e73df",
+    "Computer Science" => "#1cc88a",
+    "Economics" => "#e74a3b",
+    "Finance" => "#f6c23e",
+    "Graphic Design" => "#6f42c1",
+    "Marketing" => "#36b9cc"
+  }
+  default_color = "#858796"
+%>
+
+<div class="card shadow-sm border-0 mb-4">
+  <div class="card-body p-0">
+    <div class="table-responsive">
+      <table class="table table-bordered table-sm align-middle mb-0" style="table-layout: fixed;">
+        <thead class="table-light">
+          <tr>
+            <th style="width: 80px;" class="text-center">Time</th>
+            <% days = ["Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday"] %>
+            <% days.each do |day_name| %>
+              <th class="text-center"><%= day_name %></th>
+            <% end %>
+          </tr>
+        </thead>
+        <tbody>
+          <% (7..22).each do |hour| %>
+            <tr>
+              <td class="fw-bold bg-light text-center"><%= "%02d:00" % hour %></td>
+              <% (1..6).each do |day| %>
+                <% classes = schedule_classes[[day, hour]] || [] %>
+                <td class="p-1" style="min-width: 120px; vertical-align: top;">
+                  <% if classes.any? %>
+                    <% classes.each do |cc| %>
+                      <% 
+                        career = cc.teacher_subject.subject.careers.first
+                        bg_color = career_palette[career&.name] || default_color
+                        text_color = (career&.name == "Finance") ? "#000" : "#fff"
+                      %>
+                      <div class="badge d-block text-start text-wrap mb-1 position-relative" style="background-color: <%= bg_color %>; color: <%= text_color %>; padding: 0.5rem; line-height: 1.2;">
+                        <span class="d-block fw-bold mb-1 border-bottom border-light pb-1"><%= cc.teacher_subject.subject.name %></span>
+                        <% if role == :student %>
+                          <small class="d-block"><i class="bi bi-person-badge"></i> <%= cc.teacher_subject.teacher.name %></small>
+                          <small class="d-block mb-1"><i class="bi bi-door-open"></i> <%= cc.classroom.name %></small>
+                          <%= button_to "Drop", drop_class_path(cc), method: :delete, class: "btn btn-sm position-absolute top-0 end-0 py-0 px-1 pb-1", style: "font-size: 20px; line-height: 0.75; color: #{text_color}; border: none; background: transparent; opacity: 0.7; font-weight: bold;", form: { data: { turbo_confirm: 'Drop this class?' } }, title: "Drop class" %>
+                        <% elsif role == :teacher %>
+                          <small class="d-block"><i class="bi bi-door-open"></i> <%= cc.classroom.name %></small>
+                        <% end %>
+                      </div>
+                    <% end %>
+                  <% end %>
+                </td>
+              <% end %>
+            </tr>
+          <% end %>
+        </tbody>
+      </table>
+    </div>
+  </div>
+</div>
