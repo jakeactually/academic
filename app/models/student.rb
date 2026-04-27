@@ -8,4 +8,15 @@ class Student < ApplicationRecord
   validates :name, presence: true
   validates :email, presence: true, uniqueness: true
   validates :semester, presence: true, numericality: { greater_than: 0 }
+
+  after_create :create_user_account
+
+  private
+
+  def create_user_account
+    User.find_or_create_by!(email: email) do |user|
+      user.password = "password"
+      user.role = :student
+    end
+  end
 end
