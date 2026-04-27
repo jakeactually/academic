@@ -38,11 +38,12 @@
                         text_color = (career&.name == "Finance") ? "#000" : "#fff"
                       %>
                       <div class="badge d-block text-start text-wrap mb-1 position-relative" style="background-color: <%= bg_color %>; color: <%= text_color %>; padding: 0.5rem; line-height: 1.2;">
-                        <span class="d-block fw-bold mb-1 border-bottom border-light pb-1"><%= cc.teacher_subject.subject.name %></span>
+                        <span class="d-block fw-bold mb-1 border-bottom border-light pb-1" title="<%= cc.teacher_subject.subject.name %>">
+                          <%= truncate(cc.teacher_subject.subject.name, length: 25) %>
+                        </span>
                         <% if role == :student %>
                           <small class="d-block"><i class="bi bi-person-badge"></i> <%= cc.teacher_subject.teacher.name %></small>
                           <small class="d-block mb-1"><i class="bi bi-door-open"></i> <%= cc.classroom.name %></small>
-                          <%= button_to "Drop", drop_class_path(cc), method: :delete, class: "btn btn-sm position-absolute top-0 end-0 py-0 px-1 pb-1", style: "font-size: 20px; line-height: 0.75; color: #{text_color}; border: none; background: transparent; opacity: 0.7; font-weight: bold;", form: { data: { turbo_confirm: 'Drop this class?' } }, title: "Drop class" %>
                         <% elsif role == :teacher %>
                           <small class="d-block"><i class="bi bi-door-open"></i> <%= cc.classroom.name %></small>
                         <% end %>
