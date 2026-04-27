@@ -3,7 +3,7 @@
 <h1 class="h3 mb-4">
   Classes 
   <span class="badge bg-info text-dark ms-2" style="font-size: 0.5em; vertical-align: middle;">
-    <%= @season.capitalize %> Season (<%= @season == 'summer' ? 'Odd' : 'Even' %> Semesters)
+    <%= @season.capitalize %> Season
   </span>
 </h1>
 <p><%= link_to "Back to Dashboard", root_path, class: "btn btn-outline-secondary btn-sm mb-3" %></p>
@@ -21,7 +21,6 @@
 %>
 
 <div class="mb-4">
-  <h6 class="text-muted small text-uppercase fw-bold mb-2">Careers Legend</h6>
   <div class="d-flex flex-wrap gap-2">
     <% @careers.each do |career| %>
       <div class="d-flex align-items-center">
@@ -37,7 +36,7 @@
     <%= form_with url: admin_course_classes_path, method: :get, local: true do |f| %>
       <div class="row align-items-end">
         <div class="col-md-6 mb-3">
-          <%= f.label :classroom_id, "Classroom", class: "form-label" %>
+          <%= f.label :classroom_id, "Select Classroom", class: "form-label" %>
           <%= f.collection_select :classroom_id, @classrooms, :id, :name, { selected: @selected_classroom_id }, { class: "form-select", onchange: "this.form.submit()" } %>
         </div>
       </div>
@@ -47,7 +46,6 @@
 
 <div class="card">
   <div class="card-body">
-    <h2 class="h5 mb-3"><%= @selected_classroom&.name %> schedule</h2>
     <div class="table-responsive">
       <table class="table table-bordered table-sm" style="table-layout: fixed;">
         <thead>
