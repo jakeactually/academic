@@ -5,28 +5,83 @@
 <p class="mb-4">You are signed in as <strong><%= current_user.email %></strong>. Role: <span class="badge <%= bootstrap_role_badge_class(current_user.role) %>"><%= current_user.role.humanize %></span></p>
 
 <% if current_user.admin? %>
-  <div class="card mb-4 border-primary shadow-sm">
-    <div class="card-header bg-primary-subtle">
-      <strong>Core Catalog (Seeded)</strong>
+  <h2 class="h4 mb-3 border-bottom pb-2 mt-4 text-primary">Core Catalog (Seeded)</h2>
+  <div class="row row-cols-2 row-cols-md-3 row-cols-lg-5 g-4 mb-5">
+    <div class="col">
+      <%= link_to admin_careers_path, class: "card h-100 text-center text-decoration-none shadow-sm card-hover border-primary border-opacity-25" do %>
+        <div class="card-body py-4">
+          <i class="bi bi-briefcase fs-1 text-primary mb-3 d-block"></i>
+          <h3 class="card-title h6 mb-0 text-dark">Careers</h3>
+        </div>
+      <% end %>
     </div>
-    <div class="list-group list-group-flush">
-      <%= link_to "Careers", admin_careers_path, class: "list-group-item list-group-item-action" %>
-      <%= link_to "Teachers", admin_teachers_path, class: "list-group-item list-group-item-action" %>
-      <%= link_to "Students", admin_students_path, class: "list-group-item list-group-item-action" %>
-      <%= link_to "Subjects", admin_subjects_path, class: "list-group-item list-group-item-action" %>
-      <%= link_to "Classrooms", admin_classrooms_path, class: "list-group-item list-group-item-action" %>
+    <div class="col">
+      <%= link_to admin_teachers_path, class: "card h-100 text-center text-decoration-none shadow-sm card-hover border-primary border-opacity-25" do %>
+        <div class="card-body py-4">
+          <i class="bi bi-person-video3 fs-1 text-primary mb-3 d-block"></i>
+          <h3 class="card-title h6 mb-0 text-dark">Teachers</h3>
+        </div>
+      <% end %>
+    </div>
+    <div class="col">
+      <%= link_to admin_students_path, class: "card h-100 text-center text-decoration-none shadow-sm card-hover border-primary border-opacity-25" do %>
+        <div class="card-body py-4">
+          <i class="bi bi-mortarboard fs-1 text-primary mb-3 d-block"></i>
+          <h3 class="card-title h6 mb-0 text-dark">Students</h3>
+        </div>
+      <% end %>
+    </div>
+    <div class="col">
+      <%= link_to admin_subjects_path, class: "card h-100 text-center text-decoration-none shadow-sm card-hover border-primary border-opacity-25" do %>
+        <div class="card-body py-4">
+          <i class="bi bi-book fs-1 text-primary mb-3 d-block"></i>
+          <h3 class="card-title h6 mb-0 text-dark">Subjects</h3>
+        </div>
+      <% end %>
+    </div>
+    <div class="col">
+      <%= link_to admin_classrooms_path, class: "card h-100 text-center text-decoration-none shadow-sm card-hover border-primary border-opacity-25" do %>
+        <div class="card-body py-4">
+          <i class="bi bi-building fs-1 text-primary mb-3 d-block"></i>
+          <h3 class="card-title h6 mb-0 text-dark">Classrooms</h3>
+        </div>
+      <% end %>
     </div>
   </div>
 
-  <div class="card shadow-sm">
-    <div class="card-header">
-      Other Resources
+  <h2 class="h4 mb-3 border-bottom pb-2 text-secondary">Other Resources</h2>
+  <div class="row row-cols-2 row-cols-md-2 row-cols-lg-4 g-4 mb-4">
+    <div class="col">
+      <%= link_to admin_career_subjects_path, class: "card h-100 text-center text-decoration-none shadow-sm card-hover border-secondary border-opacity-25" do %>
+        <div class="card-body py-4">
+          <i class="bi bi-bookmark-star fs-1 text-secondary mb-3 d-block"></i>
+          <h3 class="card-title h6 mb-0 text-dark">Career Subjects</h3>
+        </div>
+      <% end %>
     </div>
-    <div class="list-group list-group-flush">
-      <%= link_to "Career Subjects", admin_career_subjects_path, class: "list-group-item list-group-item-action" %>
-      <%= link_to "Teacher Subjects", admin_teacher_subjects_path, class: "list-group-item list-group-item-action" %>
-      <%= link_to "Subject Dependencies", admin_dependent_subjects_path, class: "list-group-item list-group-item-action" %>
-      <%= link_to "Classes", admin_course_classes_path, class: "list-group-item list-group-item-action" %>
+    <div class="col">
+      <%= link_to admin_teacher_subjects_path, class: "card h-100 text-center text-decoration-none shadow-sm card-hover border-secondary border-opacity-25" do %>
+        <div class="card-body py-4">
+          <i class="bi bi-person-workspace fs-1 text-secondary mb-3 d-block"></i>
+          <h3 class="card-title h6 mb-0 text-dark">Teacher Subjects</h3>
+        </div>
+      <% end %>
+    </div>
+    <div class="col">
+      <%= link_to admin_dependent_subjects_path, class: "card h-100 text-center text-decoration-none shadow-sm card-hover border-secondary border-opacity-25" do %>
+        <div class="card-body py-4">
+          <i class="bi bi-diagram-3 fs-1 text-secondary mb-3 d-block"></i>
+          <h3 class="card-title h6 mb-0 text-dark">Dependencies</h3>
+        </div>
+      <% end %>
+    </div>
+    <div class="col">
+      <%= link_to admin_course_classes_path, class: "card h-100 text-center text-decoration-none shadow-sm card-hover border-secondary border-opacity-25" do %>
+        <div class="card-body py-4">
+          <i class="bi bi-calendar3 fs-1 text-secondary mb-3 d-block"></i>
+          <h3 class="card-title h6 mb-0 text-dark">Classes</h3>
+        </div>
+      <% end %>
     </div>
   </div>
 <% elsif current_user.teacher? %>
